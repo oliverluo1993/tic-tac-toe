@@ -47,8 +47,63 @@ def BestMove( Board, Symbol ):
  return BestPosition 
 
 
-def WLT( Board ):
+def WLT( Board, BoardSize ):
 # returns 0-3 for undecided, X wins, O wins, tie, respectively
+    state = 0
+
+    # Check rows
+    for irow in range(BoardSize):
+      found_same = True
+      symbol_col_1 = Board[irow * BoardSize]
+      for icol in range(1, BoardSize):
+        if symbol_col_1 != Board[irow * BoardSize + icol]:
+          found_same = False
+          break
+
+      if found_same:
+        return symbol_col_1
+
+    # Check columns
+    for icol in range(BoardSize):
+      found_same = True
+      symbol_row_1 = Board[icol]
+      for irow in range(1, BoardSize):
+        if symbol_row_1 != Board[irow * BoardSize + icol]:
+          found_same = False
+          break
+
+      if found_same:
+        return symbol_row_1
+
+    # Check the fisrt Diagonals
+    found_same = True
+    symbol_diag_1 = Board[0]
+    for i_element in range(1, BoardSize):
+      if symbol_diag_1 != Board[i_element * BoardSize + i_element]:
+        found_same = False
+        break
+
+    if found_same:
+      return symbol_diag_1
+
+    # Check the 2nd Diagonals
+    found_same = True
+    vairbale_one = BoardSize**2 - BoardSize
+    symbol_diag_2 = Board[vairbale_one]
+    for i_element in range(1, BoardSize):
+      if symbol_diag_2 != Board[vairbale_one - BoardSize * i_element + i_element]:
+        found_same = False
+        break
+
+    if found_same:
+      return symbol_diag_2
+
+  # Check tie
+  for i_tie in range(BoardSize**2):
+    if Board[i_tie] == 0:
+      return state # Here the state is 0, which means undecided
+
+  return 3 # return 3 means tie
 
 
 def InvertSymbol( Symbol ):
@@ -72,13 +127,25 @@ for element_in_borad in range(0, BoardSize2):
     Board.append(0)
 
 # Draw the board
-def draw( borad_size ):
-  board = ""
-  for i in range( 2 * board_size - 1):
-    if i%2 == 0:
-      board += "|    " * (board_size + 1)
+def draw( borad_size, borad ):
+  
+  board_outline = [[0 for x in range(borad_size)] for y in range(borad_size)]
+
+  for row in range(borad_size):
+    for column in range(2 * borad_size - 1):
+      if column % 2 == 0:
+        board_outline[row][column] = board[]
+
+
+
+
+  for draw_border in range( 2 * board_size - 1):
+    if draw_border % 2 == 0:
+      for row in range(board_size)
+
+      board += "|    " * (board_size)
     else:
-      board += " --- " * ( borad_size)
+      board += " --- " * (borad_size)
       board += "\n"
 
   print(board)
