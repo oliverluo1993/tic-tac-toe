@@ -10,17 +10,18 @@ def BestMove( Board, Symbol ):
 
  BestOutcome = 0 # loss(0), tie(1), win(2)
 
- # important to make sure that each copy of BestMove gets its own ScratchBoard
- ScratchBoard = Board[:]
+ ScratchBoard=[]
+ for TrialPosition in range(0, BoardSize2):
+  ScratchBoard.append(Board[TrialPosition])
 
  # these are locals, not returned
- BestPosition = 0
+ BestPosition = -1
  for TrialPosition in range(0, BoardSize2):
   if ScratchBoard[TrialPosition] == 0:
 
    ScratchBoard[TrialPosition] = Symbol
 
-   myState=WLT( ScratchBoard, len(Board) )
+   myState=WLT( ScratchBoard, BoardSize )
 
    if (myState == Symbol): # Symbol wins!
     BestPosition = TrialPosition
@@ -29,7 +30,7 @@ def BestMove( Board, Symbol ):
 
    # let the opponent choose its best move
    BestMove ( ScratchBoard, InvertSymbol(Symbol) )
-   myState=WLT( ScratchBoard, len(Board) )
+   myState=WLT( ScratchBoard, BoardSize )
 
    if (myState == InvertSymbol(Symbol) ): # Inverted symbol (opponent) wins!
     # reject this move simply by going to the next TrialPosition
@@ -46,8 +47,16 @@ def BestMove( Board, Symbol ):
     BestOutcome = TrialOutcome
     BestPosition = TrialPosition
 
- if BestPosition > 0:
+ if BestPosition > -1:
   Board[BestPosition] = Symbol
+ else:
+  # This handles a "no-win" situation:
+  # We make a move into the first empty cell
+  # In the hope that the opponent does not make
+  # it BEST move
+  for TrialPosition in range(0, BoardSize2):
+   if Board[TrialPosition] == 0:
+    Board[TrialPosition] = Symbol
 
  return BestOutcome
 
@@ -121,16 +130,19 @@ def InvertSymbol( Symbol ):
 
 def GetInput( Board, Symbol ):
 
- Prompt = print("Enter position [0-%d]: " % BoardSize2 )
+ Accepted=False
+ Prompt = "Enter position [0-%d]: " % BoardSize2 
+
  while not Accepted:
   
   InpPos = input(Prompt)
-  if (int(InpPos)):
-   Accepted = InpPos > -1 and InpPos < BoardSize2
-  else:
+  try:
+   int(InpPos)
+   Accepted = int(InpPos) > -1 and int(InpPos) < BoardSize2
+  except ValueError:
    Accepted = False
 
- Board[InpPos] = Symbol
+ Board[int(InpPos)] = Symbol
 
 
 # Display the board
@@ -145,38 +157,38 @@ def drawBoard( Board, BoardSize ):
 BoardSize=3
 BoardSize2=BoardSize*BoardSize
 
-OurTurn = 1 # random 0 or 1
+OurTurn = 0 # random 0 or 1
 OurSymbol = 1 # random: 1 or 2
 OppSymbol = InvertSymbol(OurSymbol)
 
 # how to best represent the board? X -> 1, O -> 2, empty cell -> 0
 Board = []
 for element_in_board in range(0, BoardSize2):
-    Board.append(0)
+ Board.append(0)
 
 # start the main loop
 while True:
 
-  # Let user to decide the borad size and draw the board
-  if OurTurn:
-    BestMove( Board, OurSymbol )
-    OurTurn = False
-  else:
-    GetInput( Board, OppSymbol )
-    OurTurn = True
+ # Let user to decide the borad size and draw the board
+ if OurTurn:
+  BestMove( Board, OurSymbol )
+  OurTurn = False
+ else:
+  GetInput( Board, OppSymbol )
+  OurTurn = True
 
-  State = WLT( Board, BoardSize )
-  drawBoard ( Board, BoardSize )
+ State = WLT( Board, BoardSize )
+ drawBoard ( Board, BoardSize )
 
-  if State > 0 :
-    break
+ if State > 0 :
+  break
 
 ## end of the main loop
 
 if State==1:
-  print("X wins!")
+ print("X wins!")
 elif State==2:
-  print("O wins!")
+ print("O wins!")
 else:
-  print("Tie")
+ print("Tie")
 
