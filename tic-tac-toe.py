@@ -4,15 +4,17 @@ import sys
 # Library
 
 def BestMove( Board, Symbol ):
-# if there are no winning moves returns 0
-# else updates the Board and returns the BestPosition
-# ZZZ: now the algorithm is quite dumb. 
-# to make it smarter we need to count how many branches lead to win from the current state
+# Now the algorithm is quite dumb. It works only if it can reach the 
+# bottom of the tree. To make it smarter we need to estimate how many 
+# branches lead to win from the current state.
 
- # ZZZ! important to make sure that each copy of BestMove gets its own ScratchBoard
+ BestOutcome = 0 # loss(0), tie(1), win(2)
+
+ # important to make sure that each copy of BestMove gets its own ScratchBoard
  ScratchBoard = Board[:]
- BestPosition = 0
 
+ # these are locals, not returned
+ BestPosition = 0
  for TrialPosition in range(0, BoardSize2):
   if ScratchBoard[TrialPosition] == 0:
 
@@ -22,6 +24,7 @@ def BestMove( Board, Symbol ):
 
    if (myState == Symbol): # Symbol wins!
     BestPosition = TrialPosition
+    BestOutcome = 2
     break # do not consider any other (possibly winning) moves
 
    # let the opponent choose its best move
@@ -34,17 +37,19 @@ def BestMove( Board, Symbol ):
     # this branch in the decision tree is terminated
     continue
 
-   # step deeper in the recursive tree,
-   # this is where the magic happens: this copy of the BestMove returns
-   # non-zero value if Symbol wins in the end AND
-   # InvertedSymbol does not win at any stage
-   if BestMove ( ScratchBoard, Symbol ) > 0:
+   # Step deeper in the recursive tree.
+   # This is where the magic happens: 
+   # if this BestMove returns a better outcome than the 
+   # current best we accept the 
+   TrialOutcome = BestMove ( ScratchBoard, Symbol )
+   if TrialOutcome > BestOutcome:
+    BestOutcome = TrialOutcome
     BestPosition = TrialPosition
 
  if BestPosition > 0:
   Board[BestPosition] = Symbol
 
- return BestPosition 
+ return BestOutcome
 
 
 def WLT( Board, BoardSize ):
@@ -114,20 +119,8 @@ def InvertSymbol( Symbol ):
  else:
   sys.exit("Incorrect symbol")
 
-BoardSize=3
-BoardSize2=BoardSize*BoardSize
-
-OurTurn = 1 # random 0 or 1
-OurSymbol = 1 # random: 1 or 2
-OppSymbol = InvertSymbol(OurSymbol)
-
-# how to best represent the board? X -> 1, O -> 2, empty cell -> 0
-Board = []
-for element_in_borad in range(0, BoardSize2):
-    Board.append(0)
-
 # Draw the board
-def draw( borad_size, borad ):
+def DisplayBoard( borad_size, borad ):
   
   board_outline = [[0 for x in range(borad_size)] for y in range(borad_size)]
 
@@ -150,13 +143,40 @@ def draw( borad_size, borad ):
 
   print(board)
 
+def GetInput( Board, Symbol ):
+
+ Prompt = print("Enter position [0-%d]: " % BoardSize2 )
+ while not Accepted:
+  
+  InpPos = input(Prompt)
+  if (int(InpPos)):
+   Accepted = InpPos > -1 and InpPos < BoardSize2
+  else:
+   Accepted = False
+
+ Board[InpPos] = Symbol
+
+
+
+BoardSize=3
+BoardSize2=BoardSize*BoardSize
+
+OurTurn = 1 # random 0 or 1
+OurSymbol = 1 # random: 1 or 2
+OppSymbol = InvertSymbol(OurSymbol)
+
+# how to best represent the board? X -> 1, O -> 2, empty cell -> 0
+Board = []
+for element_in_board in range(0, BoardSize2):
+    Board.append(0)
 
 # start the main loop
 while True:
-  
+
   # Let user to decide the borad size and draw the board
-  board_size = input("Please choose the board size: ")
-  draw(board_size)
+  # The code is designed to play with BoardSize=3
+  #board_size = input("Please choose the board size: ")
+  DisplayBoard(BoardSize)
 
 
  if OurTurn:
@@ -180,8 +200,4 @@ elif State==2:
  print("O wins!")
 else:
  print("Tie")
-
-
-
-
 
