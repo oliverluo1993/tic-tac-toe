@@ -18,7 +18,7 @@ def BestMove( Board, Symbol ):
 
    ScratchBoard[TrialPosition] = Symbol
 
-   myState=WLT( ScratchBoard )
+   myState=WLT( ScratchBoard, len(Board) )
 
    if (myState == Symbol): # Symbol wins!
     BestPosition = TrialPosition
@@ -26,7 +26,7 @@ def BestMove( Board, Symbol ):
 
    # let the opponent choose its best move
    BestMove ( ScratchBoard, InvertSymbol(Symbol) )
-   myState=WLT( ScratchBoard )
+   myState=WLT( ScratchBoard, len(Board) )
 
    if (myState == InvertSymbol(Symbol) ): # Inverted symbol (opponent) wins!
     # reject this move simply by going to the next TrialPosition
@@ -98,12 +98,12 @@ def WLT( Board, BoardSize ):
     if found_same:
       return symbol_diag_2
 
-  # Check tie
-  for i_tie in range(BoardSize**2):
-    if Board[i_tie] == 0:
-      return state # Here the state is 0, which means undecided
+    # Check tie
+    for i_tie in range(BoardSize**2):
+      if Board[i_tie] == 0:
+          return state # Here the state is 0, which means undecided
 
-  return 3 # return 3 means tie
+    return 3 # return 3 means tie
 
 
 def InvertSymbol( Symbol ):
@@ -114,6 +114,15 @@ def InvertSymbol( Symbol ):
  else:
   sys.exit("Incorrect symbol")
 
+# Display the board
+def drawBoard( Board, BoardSize ):
+  for row in range(BoardSize):
+    for column in range(BoardSize):
+      print(Board[BoardSize * row + column], end =" ")
+    print("\n ")
+
+### THe BEGINNING OF THE MAIN FUNCTION!!
+
 BoardSize=3
 BoardSize2=BoardSize*BoardSize
 
@@ -123,63 +132,36 @@ OppSymbol = InvertSymbol(OurSymbol)
 
 # how to best represent the board? X -> 1, O -> 2, empty cell -> 0
 Board = []
+
 for element_in_borad in range(0, BoardSize2):
     Board.append(0)
-
-# Draw the board
-def draw( borad_size, borad ):
-  
-  board_outline = [[0 for x in range(borad_size)] for y in range(borad_size)]
-
-  for row in range(borad_size):
-    for column in range(2 * borad_size - 1):
-      if column % 2 == 0:
-        board_outline[row][column] = board[]
-
-
-
-
-  for draw_border in range( 2 * board_size - 1):
-    if draw_border % 2 == 0:
-      for row in range(board_size)
-
-      board += "|    " * (board_size)
-    else:
-      board += " --- " * (borad_size)
-      board += "\n"
-
-  print(board)
-
 
 # start the main loop
 while True:
   
   # Let user to decide the borad size and draw the board
-  board_size = input("Please choose the board size: ")
-  draw(board_size)
 
+  if OurTurn:
+    BestMove( Board, OurSymbol )
+    OurTurn = False
+  else:
+    GetInput( Board, OppSymbol )
+    OurTurn = True
 
- if OurTurn:
-  BestMove( Board, OurSymbol )
-  OurTurn = False
- else:
-  GetInput( Board, OppSymbol )
-  OurTurn = True
+  State = WLT( Board, BoardSize )
+  drawBoard ( Board, BoardSize )
 
- State = WLT( Board )
- DisplayBoard ( Board )
-
- if State > 0 :
-  break
+  if State > 0 :
+    break
 
 ## end of the main loop
 
 if State==1:
- print("X wins!")
+  print("X wins!")
 elif State==2:
- print("O wins!")
+  print("O wins!")
 else:
- print("Tie")
+  print("Tie")
 
 
 
