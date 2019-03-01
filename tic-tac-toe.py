@@ -122,10 +122,11 @@ def WLT( Board, BoardSize ):
     # Check the fisrt Diagonals
     found_same = True
     symbol_diag_1 = Board[0]
-    for i_element in range(1, BoardSize):
-      if symbol_diag_1 != Board[i_element * BoardSize + i_element]:
-        found_same = False
-        break
+    if symbol_diag_1 != 0:
+        for i_element in range(1, BoardSize):
+          if symbol_diag_1 != Board[i_element * BoardSize + i_element]:
+            found_same = False
+            break
 
     if found_same:
       return symbol_diag_1
@@ -134,10 +135,11 @@ def WLT( Board, BoardSize ):
     found_same = True
     vairbale_one = BoardSize**2 - BoardSize
     symbol_diag_2 = Board[vairbale_one]
-    for i_element in range(1, BoardSize):
-      if symbol_diag_2 != Board[vairbale_one - BoardSize * i_element + i_element]:
-        found_same = False
-        break
+    if symbol_diag_2 != 0:
+        for i_element in range(1, BoardSize):
+          if symbol_diag_2 != Board[vairbale_one - BoardSize * i_element + i_element]:
+            found_same = False
+            break
 
     if found_same:
       return symbol_diag_2
