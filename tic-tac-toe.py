@@ -21,7 +21,7 @@ def BestMove( Board, Symbol ):
  BestPosition = -1 # this is a local variable to keep current best move
  TrialOutcome = -1
 
- ScratchBoard=Board.copy()
+ #ScratchBoard=Board.copy()
  for TrialPosition in range(BoardSize2):
 
   # return the scratch board to its original state 
@@ -93,36 +93,39 @@ def WLT( Board, BoardSize ):
     state = 0
 
     # Check rows
-    for irow in range(BoardSize):
+    for irow in range(3):
       found_same = True
       symbol_col_1 = Board[irow * BoardSize]
-      for icol in range(1, BoardSize):
-        if symbol_col_1 != Board[irow * BoardSize + icol]:
-          found_same = False
-          break
+      if symbol_col_1 != 0:
+          for icol in range(1, BoardSize):
+            if symbol_col_1 != Board[irow * BoardSize + icol]:
+              found_same = False
+              break
 
-      if found_same:
-        return symbol_col_1
+          if found_same:
+             return symbol_col_1
 
     # Check columns
-    for icol in range(BoardSize):
+    for icol in range(3):
       found_same = True
       symbol_row_1 = Board[icol]
-      for irow in range(1, BoardSize):
-        if symbol_row_1 != Board[irow * BoardSize + icol]:
-          found_same = False
-          break
+      if symbol_row_1 != 0:
+          for irow in range(1, BoardSize):
+            if symbol_row_1 != Board[irow * BoardSize + icol]:
+              found_same = False
+              break
 
-      if found_same:
-        return symbol_row_1
+          if found_same:
+             return symbol_row_1
 
     # Check the fisrt Diagonals
     found_same = True
     symbol_diag_1 = Board[0]
-    for i_element in range(1, BoardSize):
-      if symbol_diag_1 != Board[i_element * BoardSize + i_element]:
-        found_same = False
-        break
+    if symbol_diag_1 != 0:
+        for i_element in range(1, BoardSize):
+          if symbol_diag_1 != Board[i_element * BoardSize + i_element]:
+            found_same = False
+            break
 
     if found_same:
       return symbol_diag_1
@@ -131,15 +134,16 @@ def WLT( Board, BoardSize ):
     found_same = True
     vairbale_one = BoardSize**2 - BoardSize
     symbol_diag_2 = Board[vairbale_one]
-    for i_element in range(1, BoardSize):
-      if symbol_diag_2 != Board[vairbale_one - BoardSize * i_element + i_element]:
-        found_same = False
-        break
+    if symbol_diag_2 != 0:
+        for i_element in range(1, BoardSize):
+          if symbol_diag_2 != Board[vairbale_one - BoardSize * i_element + i_element]:
+            found_same = False
+            break
 
     if found_same:
       return symbol_diag_2
 
-    # Check tie
+    # Check undecided
     for i_tie in range(BoardSize**2):
       if Board[i_tie] == 0:
           return state # Here the state is 0, which means undecided
@@ -188,7 +192,7 @@ def drawBoard( Board ):
     Symbol = "X"
    else:
     Symbol = "Q"
-   print("%2s|" % Symbol, end ="")
+   print("%2s|" % Symbol, end =" ")
   print("")
   print(BoardSize*"__|")
 
