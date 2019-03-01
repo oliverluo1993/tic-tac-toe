@@ -169,7 +169,7 @@ def GetInput( Board, Symbol ):
   InpPos = input(Prompt)
   try:
    int(InpPos)
-   Accepted = int(InpPos) > -1 and int(InpPos) < BoardSize2
+   Accepted = int(InpPos) > -1 and int(InpPos) < BoardSize2 and Board[int(InpPos)]==0
   except ValueError:
    Accepted = False
 
@@ -193,9 +193,9 @@ def drawBoard( Board ):
   print("")
   print(BoardSize*"__|")
 
-### THe BEGINNING OF THE MAIN FUNCTION!!
+### THE BEGINNING OF THE MAIN FUNCTION!!
 
-BoardSize=4
+BoardSize=3
 BoardSize2=BoardSize*BoardSize
 
 OurTurn = 0 # random 0 or 1
@@ -208,11 +208,10 @@ for element_in_board in range(0, BoardSize2):
  Board.append(0)
 
 # create initial Board
-#Board[0]=1
-#Board[6]=1
-#Board[2]=2
-#Board[3]=2
-#Board[4]=2
+##Board[0]=1
+##Board[15]=1
+##Board[3]=2
+##Board[12]=2
 #OurTurn = 1
 
 # Draw empty board
