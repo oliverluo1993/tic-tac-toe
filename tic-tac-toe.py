@@ -179,6 +179,7 @@ def GetInput( Board, Symbol ):
 # Display the board
 def drawBoard( Board ):
  BoardSize = int(math.sqrt(len(Board)))
+ print(3*BoardSize*"_")
  for row in range(BoardSize):
   for column in range(BoardSize):
    iBoard = Board[BoardSize * row + column]
@@ -188,15 +189,16 @@ def drawBoard( Board ):
     Symbol = "X"
    else:
     Symbol = "Q"
-   print(Symbol, end ="")
+   print("%2s|" % Symbol, end ="")
   print("")
+  print(BoardSize*"__|")
 
 ### THe BEGINNING OF THE MAIN FUNCTION!!
 
-BoardSize=3
+BoardSize=4
 BoardSize2=BoardSize*BoardSize
 
-OurTurn = 1 # random 0 or 1
+OurTurn = 0 # random 0 or 1
 OurSymbol = 1 # random: 1 or 2
 OppSymbol = InvertSymbol(OurSymbol)
 
