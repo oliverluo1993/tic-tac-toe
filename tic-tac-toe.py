@@ -15,6 +15,8 @@ def BestMove( Board, Symbol ):
 # branches lead to win from the current state.
 
  global Depth
+ Depth += 1
+
  BestOutcome = 0 # loss(0), tie(1), win(2)
  BestPosition = -1 # this is a local variable to keep current best move
  TrialOutcome = -1
@@ -41,10 +43,8 @@ def BestMove( Board, Symbol ):
     continue
 
    # let the opponent choose its best move
-   Depth += 1
    BestMove ( ScratchBoard, InvertSymbol(Symbol) )
    myState=WLT( ScratchBoard, BoardSize )
-   Depth -= 1
 
    if (myState == InvertSymbol(Symbol) ): # Inverted symbol (opponent) wins!
     # reject this move simply by going to the next TrialPosition
@@ -55,14 +55,12 @@ def BestMove( Board, Symbol ):
     BestPosition = TrialPosition
     BestOutcome = 1
     continue
-
+   
    # Step deeper in the recursive tree.
    # This is where the magic happens: 
    # if this BestMove returns a better outcome than the 
    # current best we accept the 
-   Depth += 1
    TrialOutcome = BestMove ( ScratchBoard, Symbol )
-   Depth -= 1
    if TrialOutcome > BestOutcome:
     BestPosition = TrialPosition
     BestOutcome = TrialOutcome
@@ -86,6 +84,7 @@ def BestMove( Board, Symbol ):
  #if (Depth==0):
  # print( (Depth+1)*">", Symbol, BestOutcome, BestPosition, Board)
 
+ Depth -= 1
  return BestOutcome
 
 
@@ -208,9 +207,9 @@ for element_in_board in range(0, BoardSize2):
  Board.append(0)
 
 # create initial Board
-##Board[0]=1
-##Board[15]=1
-##Board[3]=2
+#Board[8]=2
+#Board[0]=1
+#Board[2]=2
 ##Board[12]=2
 #OurTurn = 1
 
